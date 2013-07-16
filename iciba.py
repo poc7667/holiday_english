@@ -41,6 +41,7 @@ def fetch_data(word_lst):
 
         req_word =str("_".join(word.split()))
         req_url =_REQ_HTTP_PREFIX+req_word
+        print(req_url)
 
         results = requests.get(req_url,
               headers={'User-Agent': 'Mozilla/5.0'}, timeout=_REQ_TIMEOUTS)
@@ -50,20 +51,30 @@ def fetch_data(word_lst):
         if not found_result(soup):
             continue
 
-        output_result("\n[%s] " % word , False)
+        look_up_word =soup.find('h1', {'id' :'word_name_h1'}).getText()
+        output_result("\n[%s] " % look_up_word , False)
 
         soup_translate =soup.find('div', {'class' :'group_pos'})
+
 
         # Chinese meaning
         for lbl in soup_translate.findChildren('label'):
             output_result( jtof( lbl.getText().strip()) , False)
         output_result('')
         soup_sent = soup.findAll('dl',{'class':'vDef_list'})
+        try:
+            got_word = soup.find('dl',{'class':'vDef_list'}).find('span',{'class' :'text_blue'}).getText()
+        except Exception as e:
+            continue
         # example sentence
         for each_sent in soup_sent:
-            res_word="".join(word.split())
-            replace_word=" ".join(word.split())
-            sent = each_sent.find('dt').getText().replace(res_word," "+replace_word+" ")
+            # res_word="".join(word.split())
+            replace_word=" ".join(got_word.split())
+            sent = each_sent.find('dt').getText().replace(got_word," "+replace_word+" ")
+
+            print each_sent.find('dt').firstText()
+            print each_sent.find('dt').getText()
+
             output_result('\t'+sent)
             output_result('\t'+jtof(each_sent.find('dd').getText()))
 
