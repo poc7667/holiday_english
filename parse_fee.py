@@ -45,10 +45,14 @@ def parse(file_path):
         x.append([i,s[i][0],s[i][1]]) # RANK NAME AMOUNT
 
     tbl.add_rows(x)
+    tbl.set_chars(['-',' ',' ','-'])
     tbl.set_cols_align(['c','c','r'])
-    tbl.set_cols_width([5,15,15])
+    tbl.set_cols_width([4,7,8])
     tbl.header(['Rank','Name','Amount'])
     print tbl.draw()
+
+
+
 
     f.close()
 
